@@ -1,0 +1,6 @@
+{
+  "appId": "com.tripmates.app",
+  "appName": "Tripmates",
+  "webDir": "www",
+  "server": { "androidScheme": "https" }
+}

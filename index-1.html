@@ -1,0 +1,400 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#1D5FD1">
+<meta name="color-scheme" content="light dark">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>Tripmates</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap">
+<style>
+:root{--bg:#F3F6FB;--card:#FFFFFF;--ink:#12202B;--mut:#5A6B85;--bd:#DCE4F1;--pri:#1D5FD1;--link:#1D5FD1;--navy:#0B2447;--amber:#F2A93B;--tint:#E3ECFB;--atint:#FDEBC8;--atext:#6B4300;--map:#E4ECF8;--road:#FFFFFF;--park:#DCEAE0;--danger:#A0281C}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0B1626;--card:#12233B;--ink:#E8EEF8;--mut:#9DB0CD;--bd:#243A5A;--pri:#2F6FDE;--link:#8DB5F7;--navy:#08162B;--tint:#16305A;--atint:#4A3510;--atext:#F6CF8A;--map:#14243D;--road:#2A4064;--park:#17342C;--danger:#FF8A7A;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0B1626;--card:#12233B;--ink:#E8EEF8;--mut:#9DB0CD;--bd:#243A5A;--pri:#2F6FDE;--link:#8DB5F7;--navy:#08162B;--tint:#16305A;--atint:#4A3510;--atext:#F6CF8A;--map:#14243D;--road:#2A4064;--park:#17342C;--danger:#FF8A7A;color-scheme:dark}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{background:var(--bg);color:var(--ink);font-family:'Manrope',system-ui,-apple-system,'Segoe UI',sans-serif;font-size:15px;line-height:1.35}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none;padding:0;text-align:left}
+#app{height:100%}
+.shell{height:100%;max-width:430px;margin:0 auto;display:flex;flex-direction:column;background:var(--bg);position:relative;overflow:hidden}
+@media (min-width:520px){.shell{border-left:1px solid var(--bd);border-right:1px solid var(--bd)}}
+.scroll{flex:1;overflow-y:auto;padding:4px 16px 20px;display:flex;flex-direction:column;gap:12px}
+.hdr{display:flex;align-items:center;gap:12px;padding:10px 16px;min-height:64px;flex:none}
+.hdr h1{font-size:20px;font-weight:800;margin:0;flex:1;min-width:0}
+.ib{width:44px;height:44px;border-radius:22px;background:var(--card);border:1px solid var(--bd);display:flex;align-items:center;justify-content:center;position:relative;flex:none}
+.dot{position:absolute;top:-3px;right:-3px;min-width:20px;height:20px;border-radius:10px;background:var(--amber);color:#3A2600;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;padding:0 5px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:18px;padding:14px;display:flex;flex-direction:column;gap:10px;width:100%}
+.row{display:flex;align-items:center;gap:12px}
+.grow{flex:1;min-width:0}
+.btn{flex:none;height:50px;border-radius:14px;background:var(--pri);color:#fff;font-weight:800;font-size:16px;display:flex;align-items:center;justify-content:center;width:100%;text-align:center;padding:0 12px}
+.btn.o{background:none;border:1.5px solid var(--pri);color:var(--link)}
+.btn.d{background:none;border:1.5px solid var(--danger);color:var(--danger)}
+.btn.n{background:var(--navy);color:#fff;border:1px solid var(--bd)}
+.btn.s{height:40px;border-radius:12px;font-size:14px;width:auto;flex:none}
+.btn[disabled]{opacity:.6;cursor:default}
+.mut{color:var(--mut);font-size:13px}
+h2{font-size:13px;font-weight:700;color:var(--mut);letter-spacing:.4px;text-transform:uppercase;margin:6px 0 0}
+.av{border-radius:50%;color:#fff;font-weight:800;display:flex;align-items:center;justify-content:center;flex:none;background-size:cover;background-position:center}
+.badge{background:var(--atint);color:var(--atext);font-weight:800;border-radius:12px;padding:5px 10px;flex:none}
+.tag{background:var(--tint);color:var(--link);font-size:12px;font-weight:800;padding:4px 10px;border-radius:10px;flex:none}
+.route{font-size:17px;font-weight:800;overflow-wrap:anywhere}
+input,select{font:inherit;color:var(--ink);background:var(--card);border:1.5px solid var(--bd);border-radius:12px;height:48px;padding:0 12px;width:100%}
+label{font-size:12px;font-weight:700;color:var(--mut);display:flex;flex-direction:column;gap:6px;min-width:0}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.nav{display:flex;border-top:1px solid var(--bd);background:var(--card);padding-bottom:env(safe-area-inset-bottom,0px);flex:none}
+.nav button{flex:1;height:60px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:11px;font-weight:700;color:var(--mut);text-align:center}
+.nav button.on{color:var(--link)}
+.toast{position:absolute;left:16px;right:16px;bottom:76px;background:var(--navy);color:#fff;padding:12px 14px;border-radius:12px;font-weight:700;text-align:center;z-index:6;border:1px solid var(--bd)}
+.banner{position:absolute;left:12px;right:12px;top:10px;background:var(--card);border:1px solid var(--bd);border-radius:18px;padding:12px 14px;z-index:7;box-shadow:0 6px 20px rgba(11,36,71,.25);display:flex;gap:12px;align-items:center;width:calc(100% - 24px)}
+.seg{display:flex;gap:8px;flex:none}
+.seg button{flex:1;height:44px;border-radius:12px;border:1.5px solid var(--bd);font-weight:700;text-align:center;background:var(--card)}
+.seg button.on{background:var(--tint);border-color:var(--pri);color:var(--link)}
+.map{flex:none;height:46%;min-height:250px;position:relative;background:var(--map)}
+.map svg{width:100%;height:100%;display:block}
+.sheet{flex:1;background:var(--card);border-radius:28px 28px 0 0;margin-top:-24px;position:relative;padding:14px 20px 20px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;box-shadow:0 -2px 12px rgba(11,36,71,.15)}
+.sw{width:48px;height:28px;border-radius:14px;background:var(--bd);position:relative;flex:none}
+.sw::after{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:11px;background:#fff;transition:left .15s}
+.sw.on{background:var(--pri)}.sw.on::after{left:23px}
+.live{display:inline-flex;align-items:center;gap:6px;background:var(--tint);color:var(--link);font-size:12px;font-weight:800;padding:5px 10px;border-radius:10px}
+.live i{width:8px;height:8px;border-radius:4px;background:var(--pri);animation:p 1.2s infinite}
+@keyframes p{50%{opacity:.3}}
+.tl{display:flex;gap:12px}.tl .rail{display:flex;flex-direction:column;align-items:center;width:14px}.tl .rail i{width:14px;height:14px;border-radius:7px;flex:none}.tl .rail u{width:3px;flex:1;min-height:30px;background:var(--bd)}
+.welcome{align-items:stretch;padding-top:24px}
+.bar{height:8px;border-radius:4px;background:var(--tint);overflow:hidden}.bar b{display:block;height:100%;background:var(--pri);width:0}
+</style>
+<style>body{margin:0}</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+(function(){
+var K='tag google or email name cont ff ffsub add sent done home find offer friends profile ftrips empty seats reqseat waiting approved follow from to date time price stops vis visf visa publish share copy approve decline start end pause resume sharemy alerts accept freq sugg myf logout lang pay invite photo rides addf pubd live minaway noreq myrides search copied plan wants apprn acc demo eta est wanted postreq early late offerride mywanted offered ridestab cancel dur posted needs open nonereq pofr pfree pcta pwant pwin findride addyf onep perleg total yourp'.split(' ');
+var T={
+en:["Travel together with friends","Continue with Google","or","Email","Your name","Continue","Find your friends","Trips are visible only to your friends.","Add","Sent","Done","Home","Find","Offer","Friends","Profile","Friends' trips","No trips yet. Add friends to see their plans.","seats","Request a seat","Waiting for approval","Approved","Follow trip","From","To","Date","Time","Price per seat (€)","Stops (optional)","Who can see this ride","Friends only","Everyone","Publish ride","Share","Copy link","Approve","Decline","Start trip and share location","End trip","Pause sharing","Resume sharing","Share my location with the driver","Notifications","Accept","Friend requests","People you may know","My friends","Log out","Language","Pay the driver directly","Copy invite link","Change photo","rides","Add friend","Ride published","LIVE","min away","No requests right now","My rides","Search","Link copied"],
+bg:["Пътувайте заедно с приятели","Продължи с Google","или","Имейл","Вашето име","Продължи","Намерете приятелите си","Пътуванията се виждат само от приятелите ви.","Добави","Изпратено","Готово","Начало","Търси","Предложи","Приятели","Профил","Пътувания на приятели","Още няма пътувания. Добавете приятели, за да виждате плановете им.","места","Заяви място","Чака одобрение","Одобрено","Следи пътуването","От","До","Дата","Час","Цена на място (€)","Спирки (по избор)","Кой вижда пътуването","Само приятели","Всички","Публикувай","Сподели","Копирай линк","Одобри","Откажи","Започни и споделяй местоположение","Край на пътуването","Пауза","Продължи споделянето","Споделям местоположението си със шофьора","Известия","Приеми","Заявки за приятелство","Може би ги познавате","Моите приятели","Изход","Език","Плащате директно на шофьора","Копирай линк за покана","Смени снимката","пътувания","Добави приятел","Пътуването е публикувано","НА ЖИВО","мин. до вас","Няма заявки в момента","Моите пътувания","Търсене","Линкът е копиран"],
+tr:["Arkadaşlarınla birlikte yolculuk et","Google ile devam et","veya","E-posta","Adınız","Devam","Arkadaşlarını bul","Yolculuklar yalnızca arkadaşlarına görünür.","Ekle","Gönderildi","Bitti","Ana sayfa","Ara","Teklif et","Arkadaşlar","Profil","Arkadaşların yolculukları","Henüz yolculuk yok. Planlarını görmek için arkadaş ekle.","koltuk","Koltuk iste","Onay bekleniyor","Onaylandı","Yolculuğu takip et","Nereden","Nereye","Tarih","Saat","Koltuk başına fiyat (€)","Duraklar (isteğe bağlı)","Yolculuğu kim görebilir","Yalnızca arkadaşlar","Herkes","Yayınla","Paylaş","Bağlantıyı kopyala","Onayla","Reddet","Yolculuğu başlat ve konumu paylaş","Yolculuğu bitir","Paylaşımı durdur","Paylaşıma devam et","Konumumu sürücüyle paylaş","Bildirimler","Kabul et","Arkadaşlık istekleri","Tanıyor olabileceklerin","Arkadaşlarım","Çıkış yap","Dil","Sürücüye doğrudan ödeyin","Davet bağlantısını kopyala","Fotoğrafı değiştir","yolculuk","Arkadaş ekle","Yolculuk yayınlandı","CANLI","dk uzakta","Şu an istek yok","Yolculuklarım","Ara","Bağlantı kopyalandı"],
+de:["Gemeinsam mit Freunden reisen","Weiter mit Google","oder","E-Mail","Dein Name","Weiter","Finde deine Freunde","Fahrten sind nur für deine Freunde sichtbar.","Hinzufügen","Gesendet","Fertig","Start","Suchen","Anbieten","Freunde","Profil","Fahrten von Freunden","Noch keine Fahrten. Füge Freunde hinzu, um ihre Pläne zu sehen.","Plätze","Platz anfragen","Warte auf Bestätigung","Bestätigt","Fahrt verfolgen","Von","Nach","Datum","Uhrzeit","Preis pro Platz (€)","Zwischenstopps (optional)","Wer sieht diese Fahrt","Nur Freunde","Alle","Fahrt veröffentlichen","Teilen","Link kopieren","Bestätigen","Ablehnen","Fahrt starten und Standort teilen","Fahrt beenden","Teilen pausieren","Teilen fortsetzen","Meinen Standort mit dem Fahrer teilen","Mitteilungen","Annehmen","Freundschaftsanfragen","Vielleicht kennst du","Meine Freunde","Abmelden","Sprache","Bezahlung direkt beim Fahrer","Einladungslink kopieren","Foto ändern","Fahrten","Freund hinzufügen","Fahrt veröffentlicht","LIVE","Min. entfernt","Gerade keine Anfragen","Meine Fahrten","Suche","Link kopiert"],
+es:["Viaja junto a tus amigos","Continuar con Google","o","Correo","Tu nombre","Continuar","Encuentra a tus amigos","Los viajes solo los ven tus amigos.","Añadir","Enviado","Listo","Inicio","Buscar","Ofrecer","Amigos","Perfil","Viajes de amigos","Aún no hay viajes. Añade amigos para ver sus planes.","plazas","Pedir plaza","Esperando aprobación","Aprobado","Seguir viaje","Desde","Hasta","Fecha","Hora","Precio por plaza (€)","Paradas (opcional)","Quién ve este viaje","Solo amigos","Todos","Publicar viaje","Compartir","Copiar enlace","Aprobar","Rechazar","Iniciar viaje y compartir ubicación","Terminar viaje","Pausar","Reanudar","Compartir mi ubicación con el conductor","Avisos","Aceptar","Solicitudes de amistad","Quizá conozcas","Mis amigos","Cerrar sesión","Idioma","Se paga directamente al conductor","Copiar enlace de invitación","Cambiar foto","viajes","Añadir amigo","Viaje publicado","EN VIVO","min de distancia","Sin solicitudes ahora","Mis viajes","Buscar","Enlace copiado"],
+ru:["Путешествуйте вместе с друзьями","Продолжить с Google","или","Эл. почта","Ваше имя","Продолжить","Найдите друзей","Поездки видны только вашим друзьям.","Добавить","Отправлено","Готово","Главная","Поиск","Предложить","Друзья","Профиль","Поездки друзей","Пока нет поездок. Добавьте друзей, чтобы видеть их планы.","мест","Запросить место","Ждёт подтверждения","Подтверждено","Следить за поездкой","Откуда","Куда","Дата","Время","Цена за место (€)","Остановки (по желанию)","Кто видит поездку","Только друзья","Все","Опубликовать","Поделиться","Копировать ссылку","Подтвердить","Отклонить","Начать поездку и делиться местоположением","Завершить поездку","Пауза","Возобновить","Делиться местоположением с водителем","Уведомления","Принять","Заявки в друзья","Возможно, вы знакомы","Мои друзья","Выйти","Язык","Оплата водителю напрямую","Копировать ссылку-приглашение","Сменить фото","поездок","Добавить в друзья","Поездка опубликована","LIVE","мин до вас","Сейчас нет запросов","Мои поездки","Поиск","Ссылка скопирована"],
+pt:["Viaje junto com os amigos","Continuar com o Google","ou","E-mail","O seu nome","Continuar","Encontre os seus amigos","As viagens só são visíveis para os seus amigos.","Adicionar","Enviado","Concluído","Início","Procurar","Oferecer","Amigos","Perfil","Viagens dos amigos","Ainda sem viagens. Adicione amigos para ver os planos deles.","lugares","Pedir lugar","A aguardar aprovação","Aprovado","Seguir viagem","De","Para","Data","Hora","Preço por lugar (€)","Paragens (opcional)","Quem vê esta viagem","Só amigos","Todos","Publicar viagem","Partilhar","Copiar ligação","Aprovar","Recusar","Iniciar viagem e partilhar localização","Terminar viagem","Pausar","Retomar","Partilhar a minha localização com o condutor","Notificações","Aceitar","Pedidos de amizade","Talvez conheça","Os meus amigos","Terminar sessão","Idioma","Pagamento direto ao condutor","Copiar ligação de convite","Mudar foto","viagens","Adicionar amigo","Viagem publicada","AO VIVO","min de distância","Sem pedidos agora","As minhas viagens","Pesquisar","Ligação copiada"],
+el:["Ταξιδέψτε μαζί με φίλους","Συνέχεια με Google","ή","Email","Το όνομά σας","Συνέχεια","Βρείτε τους φίλους σας","Τα ταξίδια φαίνονται μόνο στους φίλους σας.","Προσθήκη","Εστάλη","Τέλος","Αρχική","Αναζήτηση","Προσφορά","Φίλοι","Προφίλ","Ταξίδια φίλων","Δεν υπάρχουν ταξίδια ακόμη. Προσθέστε φίλους για να δείτε τα σχέδιά τους.","θέσεις","Αίτημα θέσης","Αναμονή έγκρισης","Εγκρίθηκε","Παρακολούθηση ταξιδιού","Από","Προς","Ημερομηνία","Ώρα","Τιμή ανά θέση (€)","Στάσεις (προαιρετικά)","Ποιος βλέπει το ταξίδι","Μόνο φίλοι","Όλοι","Δημοσίευση","Κοινοποίηση","Αντιγραφή συνδέσμου","Έγκριση","Απόρριψη","Έναρξη και κοινοποίηση τοποθεσίας","Τέλος ταξιδιού","Παύση","Συνέχιση","Κοινοποίηση τοποθεσίας στον οδηγό","Ειδοποιήσεις","Αποδοχή","Αιτήματα φιλίας","Ίσως γνωρίζετε","Οι φίλοι μου","Αποσύνδεση","Γλώσσα","Πληρωμή απευθείας στον οδηγό","Αντιγραφή συνδέσμου πρόσκλησης","Αλλαγή φωτογραφίας","ταξίδια","Προσθήκη φίλου","Το ταξίδι δημοσιεύτηκε","ΖΩΝΤΑΝΑ","λεπτά μακριά","Κανένα αίτημα τώρα","Τα ταξίδια μου","Αναζήτηση","Ο σύνδεσμος αντιγράφηκε"],
+ro:["Călătorește împreună cu prietenii","Continuă cu Google","sau","E-mail","Numele tău","Continuă","Găsește-ți prietenii","Călătoriile sunt vizibile doar prietenilor tăi.","Adaugă","Trimis","Gata","Acasă","Caută","Oferă","Prieteni","Profil","Călătoriile prietenilor","Încă nu există călătorii. Adaugă prieteni ca să le vezi planurile.","locuri","Cere un loc","Se așteaptă aprobarea","Aprobat","Urmărește călătoria","De la","La","Data","Ora","Preț pe loc (€)","Opriri (opțional)","Cine vede călătoria","Doar prietenii","Toți","Publică","Distribuie","Copiază linkul","Aprobă","Refuză","Pornește și partajează locația","Încheie călătoria","Pauză","Reia","Partajez locația cu șoferul","Notificări","Acceptă","Cereri de prietenie","Poate îi cunoști","Prietenii mei","Deconectare","Limbă","Plata se face direct șoferului","Copiază linkul de invitație","Schimbă poza","călătorii","Adaugă prieten","Călătorie publicată","LIVE","min distanță","Nicio cerere acum","Călătoriile mele","Caută","Link copiat"]};
+var E={
+en:["is planning a trip","wants to join your trip","approved your request","accepted your friend request","Demo mode: sample data only"],
+bg:["планира пътуване","иска да се присъедини към пътуването ви","одобри заявката ви","прие поканата ви за приятелство","Демо режим: само примерни данни"],
+tr:["yolculuk planlıyor","yolculuğunuza katılmak istiyor","isteğinizi onayladı","arkadaşlık isteğinizi kabul etti","Demo modu: yalnızca örnek veriler"],
+de:["plant eine Fahrt","möchte bei dir mitfahren","hat deine Anfrage bestätigt","hat deine Freundschaftsanfrage angenommen","Demo-Modus: nur Beispieldaten"],
+es:["planea un viaje","quiere unirse a tu viaje","aprobó tu solicitud","aceptó tu solicitud de amistad","Modo demo: solo datos de ejemplo"],
+ru:["планирует поездку","хочет поехать с вами","подтвердил(а) ваш запрос","принял(а) вашу заявку в друзья","Демо-режим: только тестовые данные"],
+pt:["está a planear uma viagem","quer juntar-se à sua viagem","aprovou o seu pedido","aceitou o seu pedido de amizade","Modo demo: apenas dados de exemplo"],
+el:["σχεδιάζει ένα ταξίδι","θέλει να έρθει στο ταξίδι σας","ενέκρινε το αίτημά σας","αποδέχτηκε το αίτημα φιλίας σας","Λειτουργία demo: μόνο δείγματα δεδομένων"],
+ro:["plănuiește o călătorie","vrea să se alăture călătoriei tale","ți-a aprobat cererea","ți-a acceptat cererea de prietenie","Mod demo: doar date de exemplu"]};
+var E2={
+en:["Arrives","Estimated from distance, day and time. The full app will use live Google Maps traffic.","Ride requests","Ask for a ride","Earliest departure","Latest departure","Offer a ride","My requests","offered you a ride","Rides","Cancel","Travel time","Request posted","needs a ride","Waiting for drivers","No requests yet"],
+bg:["Пристига","Приблизително според разстояние, ден и час. Пълното приложение ще ползва трафика от Google Maps на живо.","Заявки за пътуване","Поискай превоз","Най-ранно тръгване","Най-късно тръгване","Предложи превоз","Моите заявки","ви предложи превоз","Пътувания","Откажи","Време в път","Заявката е публикувана","търси превоз","Чака шофьори","Още няма заявки"],
+tr:["Varış","Mesafe, gün ve saate göre tahmini. Tam uygulama canlı Google Maps trafiğini kullanacak.","Yolculuk istekleri","Yolculuk iste","En erken kalkış","En geç kalkış","Yolculuk teklif et","İsteklerim","size yolculuk teklif etti","Yolculuklar","İptal","Yolculuk süresi","İstek yayınlandı","yolculuk arıyor","Sürücüler bekleniyor","Henüz istek yok"],
+de:["Ankunft","Geschätzt nach Entfernung, Tag und Uhrzeit. Die Vollversion nutzt Live-Verkehr von Google Maps.","Mitfahrgesuche","Mitfahrt anfragen","Früheste Abfahrt","Späteste Abfahrt","Fahrt anbieten","Meine Gesuche","hat dir eine Fahrt angeboten","Fahrten","Abbrechen","Fahrzeit","Gesuch veröffentlicht","sucht eine Mitfahrt","Warte auf Fahrer","Noch keine Gesuche"],
+es:["Llegada","Estimado según distancia, día y hora. La app completa usará el tráfico en vivo de Google Maps.","Solicitudes de viaje","Pedir un viaje","Salida más temprana","Salida más tardía","Ofrecer un viaje","Mis solicitudes","te ofreció un viaje","Viajes","Cancelar","Duración","Solicitud publicada","necesita un viaje","Esperando conductores","Aún no hay solicitudes"],
+ru:["Прибытие","Оценка по расстоянию, дню и времени. В полной версии будут пробки Google Maps в реальном времени.","Запросы на поездку","Попросить подвезти","Выезд не раньше","Выезд не позже","Предложить поездку","Мои запросы","предложил(а) вам поездку","Поездки","Отмена","Время в пути","Запрос опубликован","ищет поездку","Ждём водителей","Запросов пока нет"],
+pt:["Chegada","Estimado por distância, dia e hora. A app completa usará o trânsito em direto do Google Maps.","Pedidos de viagem","Pedir boleia","Partida mais cedo","Partida mais tarde","Oferecer viagem","Os meus pedidos","ofereceu-lhe uma viagem","Viagens","Cancelar","Duração","Pedido publicado","precisa de boleia","A aguardar condutores","Ainda sem pedidos"],
+el:["Άφιξη","Εκτίμηση βάσει απόστασης, ημέρας και ώρας. Η πλήρης εφαρμογή θα χρησιμοποιεί την κίνηση του Google Maps.","Αιτήματα διαδρομής","Ζητήστε μετακίνηση","Νωρίτερη αναχώρηση","Αργότερη αναχώρηση","Προσφορά διαδρομής","Τα αιτήματά μου","σας πρότεινε διαδρομή","Διαδρομές","Ακύρωση","Διάρκεια","Το αίτημα δημοσιεύτηκε","ψάχνει διαδρομή","Αναμονή οδηγών","Κανένα αίτημα ακόμη"],
+ro:["Sosire","Estimat după distanță, zi și oră. Aplicația completă va folosi traficul live din Google Maps.","Cereri de călătorie","Cere o călătorie","Plecare cel mai devreme","Plecare cel mai târziu","Oferă o călătorie","Cererile mele","ți-a oferit o călătorie","Călătorii","Anulează","Durata","Cerere publicată","caută o călătorie","Se așteaptă șoferi","Nicio cerere încă"]};
+var E3={
+en:["Ride offer","Free seats","Request a seat in Tripmates","Looking for a ride","Departure between"],
+bg:["Предлагам превоз","Свободни места","Заяви място в Tripmates","Търся превоз","Тръгване между"],
+tr:["Yolculuk teklifi","Boş koltuk","Tripmates'te koltuk iste","Yolculuk arıyorum","Kalkış aralığı"],
+de:["Mitfahrangebot","Freie Plätze","Platz in Tripmates anfragen","Suche Mitfahrgelegenheit","Abfahrt zwischen"],
+es:["Viaje disponible","Plazas libres","Pide plaza en Tripmates","Busco viaje","Salida entre"],
+ru:["Предлагаю поездку","Свободных мест","Запросите место в Tripmates","Ищу поездку","Выезд между"],
+pt:["Oferta de viagem","Lugares livres","Peça lugar na Tripmates","Procuro boleia","Partida entre"],
+el:["Προσφορά διαδρομής","Ελεύθερες θέσεις","Ζητήστε θέση στο Tripmates","Ψάχνω διαδρομή","Αναχώρηση μεταξύ"],
+ro:["Ofer o călătorie","Locuri libere","Cere un loc în Tripmates","Caut o călătorie","Plecare între"]};
+var E4={en:"Find a ride",bg:"Търси превоз",tr:"Yolculuk bul",de:"Mitfahrt finden",es:"Buscar viaje",ru:"Найти поездку",pt:"Procurar viagem",el:"Βρες διαδρομή",ro:"Găsește o călătorie"};
+var E6={en:["One price","Price per leg","Total","Your price"],bg:["Една цена","Цена по участъци","Общо","Вашата цена"],tr:["Tek fiyat","Etap başına fiyat","Toplam","Sizin fiyatınız"],de:["Ein Preis","Preis pro Abschnitt","Gesamt","Dein Preis"],es:["Un precio","Precio por tramo","Total","Tu precio"],ru:["Одна цена","Цена по участкам","Итого","Ваша цена"],pt:["Preço único","Preço por troço","Total","O seu preço"],el:["Μία τιμή","Τιμή ανά τμήμα","Σύνολο","Η τιμή σας"],ro:["Un preț","Preț pe tronson","Total","Prețul tău"]};
+var E5={en:"Add your friends",bg:"Добави приятели",tr:"Arkadaşlarını ekle",de:"Füge deine Freunde hinzu",es:"Añade a tus amigos",ru:"Добавьте друзей",pt:"Adicione os seus amigos",el:"Προσθέστε φίλους",ro:"Adaugă-ți prietenii"};
+for(var l in T)T[l]=T[l].concat(E[l],E2[l],E3[l],[E4[l],E5[l]].concat(E6[l]));
+/* Languages switched on in the app. To add one later, put its code here (its texts are already written, but unreviewed). */
+var ENABLED=['en','bg'];for(var l in T)if(ENABLED.indexOf(l)<0)delete T[l];
+var LANGS=[['en','English'],['bg','Български'],['tr','Türkçe'],['de','Deutsch'],['es','Español'],['ru','Русский'],['pt','Português'],['el','Ελληνικά'],['ro','Română']].filter(function(x){return T[x[0]]});
+var LOC={en:'en-GB',bg:'bg-BG',tr:'tr-TR',de:'de-DE',es:'es-ES',ru:'ru-RU',pt:'pt-PT',el:'el-GR',ro:'ro-RO'};
+
+function day(n){return new Date(Date.now()+n*864e5).toISOString().slice(0,10)}
+var P={mk:['Maria K.','#3F5BA9','Sofia',4.8,21],ip:['Ivan P.','#1D5FD1','Sofia',4.9,38],ds:['Dimitar S.','#A5533B','Plovdiv',4.6,9],gt:['Georgi T.','#2A7F62','Sofia',4.7,12],pn:['Petya N.','#6A4C93','Varna',4.8,15],ev:['Elena V.','#8A5A00','Burgas',5.0,2]};
+var S={lang:'en',user:null,stack:[['welcome']],form:{},toast:'',banner:null,photo:null,
+ friends:['mk','ip'],incoming:['ds'],sent:[],
+ trips:[
+  {id:'t1',by:'mk',from:'Sofia',to:'Varna',stops:['Veliko Tarnovo'],legs:[8,7],date:day(2),time:'07:00',seats:3,taken:1,price:15,vis:'friends'},
+  {id:'t2',by:'ip',from:'Sofia',to:'Plovdiv',stops:['Pazardzhik'],date:day(1),time:'08:30',seats:3,taken:1,price:6,vis:'friends'},
+  {id:'t3',by:'ds',from:'Plovdiv',to:'Thessaloniki',stops:['Kulata'],date:day(4),time:'09:00',seats:3,taken:0,price:18,vis:'all'},
+  {id:'t4',by:'ev',from:'Burgas',to:'Varna',stops:[],date:day(3),time:'16:00',seats:2,taken:0,price:8,vis:'all'},
+  {id:'m1',by:'me',from:'Sofia',to:'Varna',stops:['Pleven'],date:day(2),time:'07:00',seats:3,taken:1,price:15,vis:'friends'}],
+ reqs:{},wanted:[{id:'w1',by:'gt',from:'Sofia',to:'Plovdiv',date:day(1),t1:'17:00',t2:'19:00',vis:'all',st:'open'},{id:'w2',by:'pn',from:'Varna',to:'Sofia',date:day(3),t1:'08:00',t2:'12:00',vis:'all',st:'open'},{id:'w3',by:'mk',from:'Sofia',to:'Burgas',date:day(3),t1:'06:00',t2:'09:00',vis:'friends',st:'open'}],
+ rq:{m1:[{p:'gt',st:'pending'},{p:'ev',st:'pending'},{p:'pn',st:'approved'}]},
+ notifs:[{id:1,type:'wants',who:'gt',trip:'m1',read:0},{id:2,type:'plan',who:'mk',trip:'t1',read:1},{id:3,type:'acc',who:'ip',read:1}],
+ sim:{drive:false,pause:false,dprog:0,fprog:0,pass:false}};
+try{var sl=localStorage.getItem('tm_lang');if(sl&&T[sl])S.lang=sl}catch(e){}
+var nid=10,tid=10,toastT=0,banT=0;
+
+function $(s){return document.querySelector(s)}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function tt(k){var i=K.indexOf(k),a=T[S.lang]||T.en;return a[i]||T.en[i]||k}
+function nm(id){return id==='me'?(S.user?S.user.name:'Me'):P[id][0]}
+function ini(n){return n.split(/\s+/).filter(Boolean).map(function(x){return x[0]}).join('').slice(0,2).toUpperCase()}
+function av(id,sz){var c=id==='me'?'#0B2447':P[id][1],st='width:'+sz+'px;height:'+sz+'px;font-size:'+Math.round(sz*.36)+'px;background-color:'+c;
+ if(id==='me'&&S.photo)st+=';background-image:url('+S.photo+')';
+ return '<div class="av" style="'+st+'">'+(id==='me'&&S.photo?'':esc(ini(nm(id))))+'</div>'}
+function fd(d){try{return new Date(d+'T12:00:00').toLocaleDateString(LOC[S.lang]||'en-GB',{weekday:'short',day:'numeric',month:'short'})}catch(e){return d}}
+function trip(id){return S.trips.filter(function(t){return t.id===id})[0]}
+function visible(t){return t.by==='me'||t.vis==='all'||S.friends.indexOf(t.by)>=0}
+function ic(n){var p={
+ home:'<path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/>',find:'<circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/>',offer:'<circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/>',
+ friends:'<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-4 3-6 6.5-6s6.5 2 6.5 6"/><path d="M16 5a3.5 3.5 0 0 1 0 7M18 14c2.5.6 3.5 2.5 3.5 6"/>',
+ profile:'<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.5 3.5-7 8-7s8 2.5 8 7"/>',bell:'<path d="M6 17V11a6 6 0 0 1 12 0v6l2 2H4z"/><path d="M10 21h4"/>',back:'<path d="M15 5l-7 7 7 7"/>',trips:'<path d="M3 6h18M3 12h18M3 18h12"/>',share:'<circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/>'}[n];
+ return '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">'+p+'</svg>'}
+function logo(sz){return '<svg width="'+sz*1.5+'" height="'+sz+'" viewBox="0 0 62 42" aria-hidden="true"><path d="M18 3a13 13 0 0 0-13 13c0 9.5 13 23 13 23s13-13.500 13-23A13 13 0 0 0 18 3z" fill="#1D5FD1"/><circle cx="18" cy="16" r="5" fill="#fff"/><path d="M44 3a13 13 0 0 0-13 13c0 9.500 13 23 13 23s13-13.500 13-23A13 13 0 0 0 44 3z" fill="#F2A93B"/><circle cx="44" cy="16" r="5" fill="#0B2447"/></svg>'}
+
+/* ETA engine (demo estimate; the full app asks Google Maps Routes API with departure time) */
+var C={'sofia':[42.70,23.32],'plovdiv':[42.14,24.75],'varna':[43.21,27.91],'burgas':[42.50,27.47],'pazardzhik':[42.19,24.33],'veliko tarnovo':[43.08,25.63],'pleven':[43.42,24.62],'thessaloniki':[40.64,22.94],'kulata':[41.40,23.40],'karlovo':[42.64,24.81],'bucharest':[44.43,26.10],'stara zagora':[42.43,25.64],'ruse':[43.85,25.95],'blagoevgrad':[42.02,23.10],'sandanski':[41.57,23.28],'yambol':[42.48,26.50],'shumen':[43.27,26.93],'gabrovo':[42.87,25.32],'dimitrovgrad':[42.05,25.60],'haskovo':[41.93,25.56]};
+var BGN={'sofia':'София','plovdiv':'Пловдив','varna':'Варна','burgas':'Бургас','pazardzhik':'Пазарджик','veliko tarnovo':'Велико Търново','pleven':'Плевен','thessaloniki':'Солун','kulata':'Кулата','karlovo':'Карлово','bucharest':'Букурещ','stara zagora':'Стара Загора','ruse':'Русе','blagoevgrad':'Благоевград','sandanski':'Сандански','yambol':'Ямбол','shumen':'Шумен','gabrovo':'Габрово','dimitrovgrad':'Димитровград','haskovo':'Хасково','kardzhali':'Кърджали'},RB={};for(var bk in BGN)RB[BGN[bk].toLowerCase()]=bk;C['kardzhali']=[41.65,25.37];
+function lat(n){n=(n||'').trim().toLowerCase();return RB[n]||n}
+function cn(n){var k=lat(n);return S.lang==='bg'&&BGN[k]?BGN[k]:n}
+function km(a,b){var p=C[lat(a)],q=C[lat(b)];if(!p||!q)return null;var r=Math.PI/180,dx=(q[1]-p[1])*Math.cos((p[0]+q[0])/2*r)*111.3,dy=(q[0]-p[0])*111.3;return Math.max(5,Math.round(Math.hypot(dx,dy)*1.18))}
+function spd(ms){var d=new Date(ms),h=d.getHours()+d.getMinutes()/60,w=d.getDay(),f=1;
+ if(h>=22||h<5)f=1.08;else if(w>=1&&w<=4&&((h>=6.5&&h<9.5)||(h>=16&&h<19)))f=.855;else if(w===5&&((h>=6.5&&h<9.5)||(h>=15&&h<20)))f=.75;else if(w===0&&h>=16&&h<21)f=.8;return 95*f}
+function etas(t){var names=[t.from].concat(t.stops||[],[t.to]),ds=[],i,tot=km(t.from,t.to)||120,ms=new Date(t.date+'T'+t.time+':00').getTime();if(!isFinite(ms)||!t.from||!t.to)return null;
+ for(i=0;i<names.length-1;i++){ds[i]=km(names[i],names[i+1]);if(ds[i]==null)ds[i]=Math.max(10,Math.round(tot/(names.length-1)))}
+ var out=[{name:names[0],ms:ms,km:0}],cum=0;
+ for(i=0;i<ds.length;i++){if(i>0)ms+=5*6e4;ms+=ds[i]/spd(ms)*36e5;ms=Math.round(ms/3e5)*3e5;cum+=ds[i];out.push({name:names[i+1],ms:ms,km:cum})}
+ return out}
+function pts(t){return [t.from].concat(t.stops||[],[t.to])}
+function legs(t){var p=pts(t),n=p.length-1,i;if(t.legs&&t.legs.length===n)return t.legs;var ds=[],sum=0;for(i=0;i<n;i++){ds[i]=km(p[i],p[i+1])||0;sum+=ds[i]}var out=[],acc=0;for(i=0;i<n;i++){var v=i===n-1?t.price-acc:Math.round(sum?t.price*ds[i]/sum:t.price/n);v=Math.max(0,v);out.push(v);acc+=v}return out}
+function seg(t,f,to){var L=legs(t),x=0;for(var i=f;i<to;i++)x+=L[i]||0;return x}
+function p2(n){return(n<10?'0':'')+n}
+function fh(ms,base){var d=new Date(ms),b=new Date(base),s=p2(d.getHours())+':'+p2(d.getMinutes());if(d.toDateString()!==b.toDateString())s+=' +1';return s}
+function arr(t){var e=etas(t);return e?fh(e[e.length-1].ms,e[0].ms):''}
+function etaBox(t){var e=etas(t);if(!e)return '';var a=e[e.length-1],m=Math.round((a.ms-e[0].ms)/6e4);
+ return '<div class="card" style="background:var(--navy);color:#fff;gap:6px"><div class="row"><div class="grow"><div style="color:#BCCDEB;font-size:12px;font-weight:700">'+esc(tt('eta').toUpperCase())+' · '+esc(t.to)+'</div><b style="font-size:28px;line-height:34px">'+esc(fh(a.ms,e[0].ms))+'</b></div><div style="text-align:right"><div style="font-weight:800">'+esc(tt('dur'))+' '+Math.floor(m/60)+':'+p2(m%60)+' h</div><div style="color:#BCCDEB">'+a.km+' km</div></div></div><div style="color:#BCCDEB;font-size:12px">'+esc(tt('est'))+'</div></div>'}
+
+/* map */
+var ROUTE='M70 470 C 120 380, 150 350, 190 330 S 280 250, 330 130',PATH=null,PF=.45;
+function pathEl(){if(PATH)return PATH;try{PATH=document.createElementNS('http://www.w3.org/2000/svg','path');PATH.setAttribute('d',ROUTE);PATH.getTotalLength()}catch(e){PATH=null}return PATH}
+function pt(f){try{var p=pathEl();if(p){var L=p.getTotalLength(),q=p.getPointAtLength(L*f);if(isFinite(q.x))return[q.x,q.y]}}catch(e){}return[70+260*f,470-340*f]}
+(function(){var best=1e9,bf=.45;for(var i=0;i<=100;i++){var q=pt(i/100),d=Math.hypot(q[0]-190,q[1]-330);if(d<best){best=d;bf=i/100}}PF=bf||.45})();
+function mapSvg(o){var m=pt(o.f);
+ return '<svg viewBox="20 100 350 400" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Map"><rect width="390" height="540" style="fill:var(--map)"/><rect x="230" y="330" width="120" height="90" rx="18" style="fill:var(--park)"/>'+
+ '<path d="M0 400L390 300M120 100L230 540M0 200L390 230" style="stroke:var(--road)" stroke-width="9" fill="none"/>'+
+ '<path d="'+ROUTE+'" style="stroke:var(--road)" stroke-width="16" stroke-linecap="round" fill="none"/><path d="'+ROUTE+'" stroke="#2F6FDE" stroke-width="8" stroke-linecap="round" fill="none"/>'+
+ '<circle cx="70" cy="470" r="9" fill="#0B2447" stroke="#fff" stroke-width="3"/><circle cx="190" cy="330" r="10" fill="#F2A93B" stroke="#fff" stroke-width="3"/><rect x="322" y="122" width="16" height="16" rx="4" fill="#0B2447" stroke="#fff" stroke-width="3"/>'+
+ '<text x="204" y="318" font-size="12" font-weight="700" style="fill:var(--ink)">'+esc(o.stop||'')+'</text>'+
+ (o.pass?'<circle cx="214" cy="354" r="11" fill="#0B2447" stroke="#fff" stroke-width="3"/><text x="228" y="358" font-size="12" font-weight="700" style="fill:var(--ink)">'+esc(o.passLabel||'')+'</text>':'')+
+ (o.gt?'<circle cx="214" cy="354" r="13" fill="#2A7F62" stroke="#fff" stroke-width="3"/><text x="214" y="358" fill="#fff" font-size="9" font-weight="800" text-anchor="middle">'+esc(o.gt)+'</text>':'')+
+ '<g id="mk" transform="translate('+m[0].toFixed(1)+' '+m[1].toFixed(1)+')"><circle r="34" fill="#2F6FDE" opacity=".18"/><circle r="18" fill="#2F6FDE" stroke="#fff" stroke-width="4"/><path d="M0-9L7 8 0 4-7 8z" fill="#fff"/></g></svg>'}
+
+/* ui helpers */
+function hdr(title,right){return '<div class="hdr"><button class="ib" data-a="back" aria-label="Back">'+ic('back')+'</button><h1>'+esc(title)+'</h1>'+(right||'')+'</div>'}
+function nav(cur){var tabs=['home','trips','friends','profile'];return '<div class="nav">'+tabs.map(function(k){return '<button class="'+(k===cur?'on':'')+'" data-a="tab" data-x="'+k+'">'+ic(k)+'<span>'+esc(tt(k==='trips'?'ridestab':k))+'</span></button>'}).join('')+'</div>'}
+function unread(){return S.notifs.filter(function(n){return!n.read}).length}
+function topbar(title){var u=unread();return '<div class="hdr"><div class="row grow">'+logo(26)+'<h1>'+esc(title)+'</h1></div><button class="ib" data-a="alerts" aria-label="'+esc(tt('alerts'))+'">'+ic('bell')+(u?'<span class="dot">'+u+'</span>':'')+'</button></div>'}
+function tcard(t){var left=t.seats-t.taken;return '<button class="card" data-a="go" data-x="ride" data-y="'+t.id+'"><div class="row">'+av(t.by,44)+'<div class="grow"><b>'+esc(nm(t.by))+'</b><div class="mut">'+esc(fd(t.date))+' · '+esc(t.time)+'</div></div><span class="badge">€'+t.price+'</span></div><div class="route">'+esc(t.from)+' → '+esc(t.to)+'</div><div class="mut">'+left+'/'+t.seats+' '+esc(tt('seats'))+(t.vis==='friends'?' · '+esc(tt('visf')):'')+(arr(t)?' · '+esc(tt('eta'))+' '+esc(arr(t)):'')+'</div></button>'}
+function pcard(id,right){return '<div class="card"><div class="row"><button class="row grow" data-a="go" data-x="user" data-y="'+id+'">'+av(id,44)+'<div class="grow"><b>'+esc(nm(id))+'</b><div class="mut">'+esc(P[id][2])+'</div></div></button>'+(right||'')+'</div></div>'}
+
+/* views */
+var V={};
+V.welcome=function(){
+ return '<div class="scroll welcome"><div class="row" style="justify-content:center;flex-direction:column;gap:6px;margin-top:10px">'+logo(56)+'<div style="font-size:32px;font-weight:800">Tripmates</div><div class="mut" style="font-size:15px;text-align:center">'+esc(tt('tag'))+'</div></div>'+
+ '<div class="seg">'+LANGS.map(function(l){return '<button class="'+(l[0]===S.lang?'on':'')+'" data-a="setlang" data-x="'+l[0]+'">'+l[1]+'</button>'}).join('')+'</div>'+
+ '<button class="btn" data-a="google" style="background:#fff;color:#12202B;border:1.5px solid var(--bd)">G&nbsp; '+esc(tt('google'))+'</button><div class="mut" style="text-align:center">'+esc(tt('or'))+'</div>'+
+ '<label>'+esc(tt('email'))+'<input data-bind="email" type="email" value="'+esc(S.form.email||'')+'" autocomplete="email"></label>'+
+ '<button class="btn" data-a="emaillogin">'+esc(tt('cont'))+'</button><div class="mut" style="text-align:center">'+esc(tt('demo'))+'</div></div>'};
+function board(){var o=S.wanted.filter(function(w){return w.by!=='me'&&w.st==='open'&&(w.vis==='all'||S.friends.indexOf(w.by)>=0)});if(!o.length)return '';
+ return '<h2>'+esc(tt('wanted'))+'</h2>'+o.slice(0,3).map(function(w){return '<div class="card"><div class="row">'+av(w.by,36)+'<div class="grow"><b>'+esc(cn(w.from))+' → '+esc(cn(w.to))+'</b><div class="mut">'+esc(nm(w.by))+' · '+esc(fd(w.date))+' · '+esc(w.t1)+'–'+esc(w.t2)+'</div></div><button class="btn s" data-a="offerfor" data-x="'+w.id+'">'+esc(tt('offer'))+'</button></div></div>'}).join('')}
+V.home=function(){var ft=S.trips.filter(function(t){return t.by!=='me'&&S.friends.indexOf(t.by)>=0}).sort(function(a,b){return a.date<b.date?-1:1}).slice(0,3);
+ function big(x,cls,icn,col,lab){return '<button class="btn'+cls+'" data-a="go" data-x="'+x+'" style="height:96px;flex-direction:row;gap:14px;font-size:19px;border-radius:20px"><span style="color:'+col+'">'+ic(icn).replace('width="22" height="22"','width="34" height="34"')+'</span>'+esc(lab)+'</button>'}
+ return topbar('Tripmates')+'<div class="scroll">'+big('find','','find','#fff',tt('findride'))+big('offer',' n','offer','var(--amber)',tt('offerride'))+
+ '<h2>'+esc(tt('ftrips'))+'</h2>'+(ft.length?ft.map(tcard).join(''):'<div class="card mut">'+esc(tt('empty'))+'</div>')+
+ '<button class="btn o" data-a="tab" data-x="friends">'+esc(tt('addyf'))+'</button></div>'+nav('home')};
+V.trips=function(){var mine=S.trips.filter(function(t){return t.by==='me'}),sr=S.trips.filter(function(t){return S.reqs[t.id]}),wr=S.wanted.filter(function(w){return w.by==='me'});
+ function row(t,tag,a,x){return '<button class="card" data-a="'+a+'" data-x="'+x+'" data-y="'+t.id+'"><div class="row"><div class="route grow">'+esc(cn(t.from))+' → '+esc(cn(t.to))+'</div><span class="tag">'+tag+'</span></div><div class="mut">'+esc(fd(t.date))+' · '+esc(t.time)+(t.by!=='me'?' · '+esc(nm(t.by)):'')+'</div></button>'}
+ var any=mine.length||sr.length||wr.length;
+ return topbar(tt('ridestab'))+'<div class="scroll">'+
+ (mine.length?'<h2>'+esc(tt('myrides'))+'</h2>'+mine.map(function(t){var n=(S.rq[t.id]||[]).filter(function(r){return r.st==='pending'}).length;return row(t,n?'⏳ '+n:'✓','go','requests')}).join(''):'')+
+ (sr.length?'<h2>'+esc(tt('reqseat'))+'</h2>'+sr.map(function(t){return row(t,S.reqs[t.id]==='approved'?'✓':'⏳','go','ride')}).join(''):'')+
+ (wr.length?'<h2>'+esc(tt('mywanted'))+'</h2>'+wr.map(wcard).join(''):'')+
+ (any?'':'<div class="card mut">'+esc(tt('nonereq'))+'</div><button class="btn" data-a="go" data-x="find">'+esc(tt('findride'))+'</button><button class="btn o" data-a="go" data-x="offer">'+esc(tt('offerride'))+'</button>')+'</div>'+nav('trips')};
+V.find=function(){var f=S.form,fr=(f.sfrom||'').toLowerCase(),to=(f.sto||'').toLowerCase(),sd=f.sdate||'',vis=f.prvis||'friends';
+ var list=S.trips.filter(function(t){return t.by!=='me'&&visible(t)&&(t.from+' '+t.stops.join(' ')).toLowerCase().indexOf(fr)>=0&&(t.to+' '+t.stops.join(' ')).toLowerCase().indexOf(to)>=0&&(!sd||t.date===sd)});
+ return hdr(tt('findride'))+'<div class="scroll"><div class="two"><label>'+esc(tt('from'))+'<input data-bind="sfrom" value="'+esc(f.sfrom||'')+'"></label><label>'+esc(tt('to'))+'<input data-bind="sto" value="'+esc(f.sto||'')+'"></label></div>'+
+ '<label>'+esc(tt('date'))+'<input type="date" data-bind="sdate" value="'+esc(sd)+'"></label><button class="btn" data-a="search">'+esc(tt('search'))+'</button>'+list.map(tcard).join('')+
+ '<div class="card" style="gap:12px"><b>'+esc(tt('postreq'))+'</b><div class="two"><label>'+esc(tt('early'))+'<input type="time" data-bind="prt1" value="'+esc(f.prt1!=null?f.prt1:'17:00')+'"></label><label>'+esc(tt('late'))+'<input type="time" data-bind="prt2" value="'+esc(f.prt2!=null?f.prt2:'19:00')+'"></label></div>'+
+ '<div class="seg"><button class="'+(vis==='friends'?'on':'')+'" data-a="pvis" data-x="friends">'+esc(tt('visf'))+'</button><button class="'+(vis==='all'?'on':'')+'" data-a="pvis" data-x="all">'+esc(tt('visa'))+'</button></div><button class="btn o" data-a="postreqgo">'+esc(tt('postreq'))+'</button></div></div>'};
+V.ride=function(id){var t=trip(id);if(!t)return hdr('?');var st=S.reqs[t.id],mine=t.by==='me',LG=legs(t),sf=+(S.form['sgf'+t.id]||0),stt=+(S.form['sgt'+t.id]!=null?S.form['sgt'+t.id]:LG.length),sp=seg(t,sf,stt),ev=etas(t),stops=ev?ev.map(function(e,i){return[e.name,fh(e.ms,ev[0].ms),i===0?'var(--pri)':i===ev.length-1?'var(--ink)':'var(--amber)']}):[[t.from,t.time,'var(--pri)']].concat(t.stops.map(function(s){return[s,'','var(--amber)']})).concat([[t.to,'','var(--ink)']]);
+ var cta=mine?'<button class="btn" data-a="go" data-x="requests" data-y="'+t.id+'">'+esc(tt('freq'))+'</button>':st==='approved'?(t.id==='t2'?'<button class="btn" data-a="startfollow">'+esc(tt('follow'))+'</button>':'<button class="btn" disabled>'+esc(tt('approved'))+' ✓</button>'):st==='pending'?'<button class="btn" disabled>'+esc(tt('waiting'))+'…</button>':'<button class="btn" data-a="reqseat" data-x="'+t.id+'">'+esc(tt('reqseat'))+'</button>';
+ var segUI=(stops.length>2&&!mine)?'<div class="card"><div class="two"><label>'+esc(tt('from'))+'<select data-sg="f" data-tid="'+t.id+'"'+(st?' disabled':'')+'>'+stops.slice(0,-1).map(function(p,i){return '<option value="'+i+'"'+(i===sf?' selected':'')+'>'+esc(p[0])+'</option>'}).join('')+'</select></label><label>'+esc(tt('to'))+'<select data-sg="t" data-tid="'+t.id+'"'+(st?' disabled':'')+'>'+stops.map(function(p,i){return i?'<option value="'+i+'"'+(i===stt?' selected':'')+'>'+esc(p[0])+'</option>':''}).join('')+'</select></label></div><div class="row"><span class="grow mut">'+esc(tt('yourp'))+'</span><b style="font-size:20px">€'+sp+'</b></div></div>':'';
+ return hdr(t.from+' → '+t.to,'<button class="ib" data-a="go" data-x="share" data-y="'+t.id+'" aria-label="'+esc(tt('share'))+'">'+ic('share')+'</button>')+'<div class="scroll"><div class="row"><div class="mut grow" style="font-weight:700">'+esc(fd(t.date))+'</div><span class="badge" style="font-size:20px">€'+sp+'</span></div>'+
+ etaBox(t)+'<div class="card" style="gap:0">'+stops.map(function(s,i){return '<div class="tl"><div class="rail"><i style="background:'+s[2]+'"></i>'+(i<stops.length-1?'<u></u>':'')+'</div><div class="grow" style="padding-bottom:'+(i<stops.length-1?12:0)+'px"><div class="row"><b class="grow">'+esc(s[0])+'</b><b>'+esc(s[1])+'</b></div>'+(i<stops.length-1?'<div class="mut">↓ €'+LG[i]+'</div>':'')+'</div></div>'}).join('')+'</div>'+
+ '<button class="card" data-a="go" data-x="user" data-y="'+t.by+'"><div class="row">'+av(t.by,48)+'<div class="grow"><b>'+esc(nm(t.by))+'</b><div class="mut">'+(t.by==='me'?'':P[t.by][3]+' ★ · '+P[t.by][4]+' '+esc(tt('rides')))+'</div></div></div></button>'+
+ '<div class="mut" style="text-align:center">'+(t.seats-t.taken)+' / '+t.seats+' '+esc(tt('seats'))+' · '+esc(tt('pay'))+'</div>'+
+ segUI+cta+'</div>'};
+var PT={
+en:["I'm driving to {to} on {date} ({wd}). Leaving {from} at {dep}, arriving around {arr}.{stops} I have {n} free seats, €{price} per seat. Click on the post."," Stopping at {stops}.","Looking for a ride from {from} to {to} on {date} ({wd}), leaving between {t1} and {t2}. Click on the post."],
+bg:["Пътувам до {to} на {date} ({wd}). Тръгвам от {from} в {dep}, пристигам около {arr}.{stops} Имам {n} свободни места, {price} € на място. Кликнете на поста."," Минавам през {stops}.","Търся превоз от {from} до {to} на {date} ({wd}), тръгване между {t1} и {t2} ч. Кликнете на поста."],
+tr:["{date} ({wd}) {to} yönüne gidiyorum. {from}'den {dep}'de çıkıyorum, yaklaşık {arr}'de varıyorum.{stops} {n} boş koltuğum var, koltuk başı {price} €. Gönderiye tıklayın."," {stops} üzerinden geçiyorum.","{date} ({wd}) {from} – {to} arası yolculuk arıyorum, {t1} ile {t2} arası kalkış. Gönderiye tıklayın."],
+de:["Ich fahre am {date} ({wd}) nach {to}. Abfahrt in {from} um {dep}, Ankunft ca. {arr}.{stops} {n} freie Plätze, {price} € pro Platz. Klickt auf den Beitrag."," Zwischenstopps: {stops}.","Suche Mitfahrgelegenheit von {from} nach {to} am {date} ({wd}), Abfahrt zwischen {t1} und {t2} Uhr. Klickt auf den Beitrag."],
+es:["Viajo a {to} el {date} ({wd}). Salgo de {from} a las {dep} y llego sobre las {arr}.{stops} Tengo {n} plazas libres, {price} € por plaza. Haz clic en la publicación."," Paso por {stops}.","Busco viaje de {from} a {to} el {date} ({wd}), saliendo entre las {t1} y las {t2}. Haz clic en la publicación."],
+ru:["Еду в {to} {date} ({wd}). Выезжаю из {from} в {dep}, буду около {arr}.{stops} Есть {n} свободных мест, {price} € за место. Нажмите на пост."," По пути: {stops}.","Ищу поездку из {from} в {to} {date} ({wd}), выезд между {t1} и {t2}. Нажмите на пост."],
+pt:["Vou para {to} no dia {date} ({wd}). Saio de {from} às {dep} e chego por volta das {arr}.{stops} Tenho {n} lugares livres, {price} € por lugar. Clique na publicação."," Passo por {stops}.","Procuro boleia de {from} para {to} no dia {date} ({wd}), partida entre as {t1} e as {t2}. Clique na publicação."],
+el:["Ταξιδεύω προς {to} στις {date} ({wd}). Φεύγω από {from} στις {dep} και φτάνω περίπου στις {arr}.{stops} Έχω {n} ελεύθερες θέσεις, {price} € ανά θέση. Πατήστε στη δημοσίευση."," Περνάω από {stops}.","Ψάχνω διαδρομή από {from} προς {to} στις {date} ({wd}), αναχώρηση μεταξύ {t1} και {t2}. Πατήστε στη δημοσίευση."],
+ro:["Merg la {to} pe {date} ({wd}). Plec din {from} la {dep}, ajung pe la {arr}.{stops} Am {n} locuri libere, {price} € pe loc. Apasă pe postare."," Trec prin {stops}.","Caut o călătorie de la {from} la {to} pe {date} ({wd}), plecare între {t1} și {t2}. Apasă pe postare."]};
+function dmy(d){var p=String(d).split('-');return p.length===3?p[2]+'.'+p[1]+'.'+p[0]:d}
+function wday(d){try{return new Date(d+'T12:00:00').toLocaleDateString(LOC[S.lang]||'en-GB',{weekday:'long'}).toLowerCase()}catch(e){return ''}}
+function fill(tpl,o){return tpl.replace(/\{(\w+)\}/g,function(m,k){return o[k]!=null?o[k]:''})}
+function shareText(id){var P3=PT[S.lang]||PT.en,w=id.charAt(0)==='w'?wnt(id):null;
+ if(w)return fill(P3[2],{from:cn(w.from),to:cn(w.to),date:dmy(w.date),wd:wday(w.date),t1:w.t1,t2:w.t2});
+ var t=trip(id);if(!t)return '';var e=etas(t);
+ return fill(P3[0],{from:cn(t.from),to:cn(t.to),date:dmy(t.date),wd:wday(t.date),dep:t.time,arr:e?fh(e[e.length-1].ms,e[0].ms):'',stops:(t.stops.length?fill(P3[1],{stops:t.stops.map(cn).join(', ')}):'')+(t.legs&&t.stops.length?' '+legs(t).map(function(v,i){return cn(pts(t)[i])+'–'+cn(pts(t)[i+1])+' '+v+' €'}).join(', ')+'.':''),n:t.seats-t.taken,price:t.price})}
+function wnt(id){return S.wanted.filter(function(w){return w.id===id})[0]}
+function wcard(w){var mine=w.by==='me',btn=mine?(w.st==='offered'&&w.trip?'<button class="btn s grow" data-a="go" data-x="ride" data-y="'+w.trip+'">'+esc(tt('ridestab'))+' →</button>':'')+'<button class="btn s o grow" data-a="go" data-x="share" data-y="'+w.id+'">'+esc(tt('share'))+'</button><button class="btn s o grow" data-a="cancelreq" data-x="'+w.id+'">'+esc(tt('cancel'))+'</button>':'<button class="btn s grow" data-a="offerfor" data-x="'+w.id+'">'+esc(tt('offerride'))+'</button>';
+ return '<div class="card"><div class="row">'+av(w.by,44)+'<div class="grow"><b>'+esc(nm(w.by))+'</b><div class="mut">'+esc(fd(w.date))+' · '+esc(w.t1)+'–'+esc(w.t2)+'</div></div><span class="tag">'+(w.st==='offered'?'✓':'⏳')+'</span></div><div class="route">'+esc(w.from)+' → '+esc(w.to)+'</div><div class="row">'+btn+'</div></div>'}
+function legUI(g){var custom=g('omode','one')==='leg',h='<div class="seg"><button class="'+(custom?'':'on')+'" data-a="omode" data-x="one">'+esc(tt('onep'))+'</button><button class="'+(custom?'on':'')+'" data-a="omode" data-x="leg">'+esc(tt('perleg'))+'</button></div>';
+ if(!custom)return h+'';
+ var o={from:g('ofrom','Sofia'),to:g('oto','Plovdiv'),stops:String(g('ostops','')).split(',').map(function(x){return x.trim()}).filter(Boolean),price:+g('oprice','5')||0},p=pts(o),n=p.length-1;
+ if(!S.form.olegs||S.form.olegs.length!==n)S.form.olegs=legs(o).map(String);
+ var sum=S.form.olegs.reduce(function(a,b){return a+(+b||0)},0);
+ return h+p.slice(0,-1).map(function(x,i){return '<label>'+esc(x)+' → '+esc(p[i+1])+' (€)<input type="number" min="0" data-leg="'+i+'" value="'+esc(S.form.olegs[i])+'"></label>'}).join('')+'<div class="row"><span class="grow mut">'+esc(tt('total'))+'</span><b style="font-size:20px">€'+sum+'</b></div>'}
+V.offer=function(){var f=S.form,g=function(k,d){return f[k]!=null?f[k]:d},vis=g('ovis','friends');
+ return hdr(tt('offerride'))+'<div class="scroll">'+board()+'<div class="two"><label>'+esc(tt('from'))+'<input data-bind="ofrom" value="'+esc(g('ofrom','Sofia'))+'"></label><label>'+esc(tt('to'))+'<input data-bind="oto" value="'+esc(g('oto','Plovdiv'))+'"></label></div>'+
+ '<label>'+esc(tt('stops'))+'<input data-bind="ostops" value="'+esc(g('ostops',''))+'" placeholder="Pazardzhik, ..."></label>'+
+ '<div class="two"><label>'+esc(tt('date'))+'<input type="date" data-bind="odate" value="'+esc(g('odate',day(2)))+'"></label><label>'+esc(tt('time'))+'<input type="time" data-bind="otime" value="'+esc(g('otime','08:00'))+'"></label></div>'+
+ '<div class="two"><label>'+esc(tt('seats'))+'<select data-bind="oseats">'+[1,2,3,4,5,6].map(function(n){return '<option'+(String(g('oseats','3'))===String(n)?' selected':'')+'>'+n+'</option>'}).join('')+'</select></label><label>'+esc(tt('price'))+'<input type="number" min="0" data-bind="oprice" value="'+esc(g('oprice','5'))+'"></label></div>'+
+ legUI(g)+'<label>'+esc(tt('vis'))+'</label><div class="seg"><button class="'+(vis==='friends'?'on':'')+'" data-a="vis" data-x="friends">'+esc(tt('visf'))+'</button><button class="'+(vis==='all'?'on':'')+'" data-a="vis" data-x="all">'+esc(tt('visa'))+'</button></div>'+
+ (f.reply&&wnt(f.reply)?'<span class="tag" style="align-self:flex-start">'+esc(nm(wnt(f.reply).by))+' '+esc(tt('needs'))+'</span>':'')+etaBox({from:g('ofrom','Sofia'),to:g('oto','Plovdiv'),stops:String(g('ostops','')).split(',').map(function(s){return s.trim()}).filter(Boolean),date:g('odate',day(2)),time:g('otime','08:00')})+'<button class="btn" data-a="publish">'+esc(tt('publish'))+'</button></div>'};
+V.share=function(id){var tx=shareText(id);if(!tx)return hdr('?');var t=trip(id),w=wnt(id),by=w?w.by:t.by,r=w?w.from+' → '+w.to:t.from+' → '+t.to;
+ return hdr(tt('share'))+'<div class="scroll"><div class="card" style="gap:12px"><div class="row">'+av(by,40)+'<div class="grow"><b>'+esc(nm(by))+'</b><div class="mut">Facebook · 🌐</div></div></div><div style="font-size:16px;line-height:1.5">'+esc(tx)+'</div>'+
+ '<div style="background:var(--navy);color:#fff;border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:6px"><div class="row">'+logo(20)+'<b>Tripmates</b></div><div class="route" style="color:#fff">'+esc(r)+'</div></div></div>'+
+ ['Facebook','Instagram','TikTok'].map(function(n){return '<button class="btn o" data-a="sharepost" data-x="'+esc(id)+'">'+n+'</button>'}).join('')+
+ '<button class="btn" data-a="sharepost" data-x="'+esc(id)+'">'+esc(tt('copy'))+'</button></div>'};
+V.friends=function(){return hdr(tt('friends'))+'<div class="scroll">'+
+ (S.incoming.length?'<h2>'+esc(tt('freq'))+'</h2>'+S.incoming.map(function(id){return pcard(id,'<button class="btn s" data-a="accept" data-x="'+id+'">'+esc(tt('accept'))+'</button>')}).join(''):'')+
+ '<h2>'+esc(tt('sugg'))+'</h2>'+['gt','pn','ev'].filter(function(id){return S.friends.indexOf(id)<0}).map(function(id){var s=S.sent.indexOf(id)>=0;return pcard(id,'<button class="btn s'+(s?' o':'')+'" data-a="add" data-x="'+id+'"'+(s?' disabled':'')+'>'+esc(tt(s?'sent':'add'))+'</button>')}).join('')+
+ '<h2>'+esc(tt('myf'))+' ('+S.friends.length+')</h2>'+S.friends.map(function(id){return pcard(id)}).join('')+
+ '<button class="btn o" data-a="invite">'+esc(tt('invite'))+'</button></div>'+nav('friends')};
+V.profile=function(){var mine=S.trips.filter(function(t){return t.by==='me'});
+ return hdr(tt('profile'))+'<div class="scroll"><div class="card" style="align-items:center">'+av('me',84)+'<b style="font-size:20px">'+esc(nm('me'))+'</b><div class="mut">'+(S.user&&S.user.email?esc(S.user.email):'')+'</div>'+
+ '<label class="btn o s" style="cursor:pointer;flex-direction:row;color:var(--link);font-size:14px">'+esc(tt('photo'))+'<input type="file" accept="image/*" data-photo="1" hidden></label></div>'+
+ '<label>'+esc(tt('lang'))+'<select data-lang="1">'+LANGS.map(function(l){return '<option value="'+l[0]+'"'+(l[0]===S.lang?' selected':'')+'>'+l[1]+'</option>'}).join('')+'</select></label>'+
+ '<button class="btn d" data-a="logout">'+esc(tt('logout'))+'</button></div>'+nav('profile')};
+V.user=function(id){var fr=S.friends.indexOf(id)>=0,sent=S.sent.indexOf(id)>=0,ts=S.trips.filter(function(t){return t.by===id&&visible(t)});
+ var btn=fr?'<span class="tag">'+esc(tt('friends'))+' ✓</span>':'<button class="btn s'+(sent?' o':'')+'" data-a="add" data-x="'+id+'"'+(sent?' disabled':'')+'>'+esc(tt(sent?'sent':'addf'))+'</button>';
+ return hdr(nm(id))+'<div class="scroll"><div class="card" style="align-items:center">'+av(id,84)+'<b style="font-size:20px">'+esc(nm(id))+'</b><div class="mut">'+esc(P[id][2])+' · '+P[id][3]+' ★ · '+P[id][4]+' '+esc(tt('rides'))+'</div>'+btn+'</div>'+ts.map(tcard).join('')+'</div>'};
+V.requests=function(id){var t=trip(id),rs=S.rq[id]||[],w=rs.filter(function(r){return r.st==='pending'}),a=rs.filter(function(r){return r.st==='approved'});
+ if(!t)return hdr('?');
+ return hdr(tt('freq'))+'<div class="scroll"><div class="card" style="background:var(--navy);color:#fff"><div class="row"><div class="grow route" style="color:#fff">'+esc(t.from)+' → '+esc(t.to)+'</div><b style="color:#F2A93B;font-size:20px">'+t.taken+'/'+t.seats+'</b></div><div style="color:#BCCDEB">'+esc(fd(t.date))+' · '+esc(t.time)+'</div></div>'+
+ (w.length?'<h2>⏳ ('+w.length+')</h2>'+w.map(function(r){return '<div class="card"><div class="row">'+av(r.p,46)+'<div class="grow"><b>'+esc(nm(r.p))+'</b><div class="mut">'+P[r.p][3]+' ★ · '+P[r.p][4]+' '+esc(tt('rides'))+'</div></div><span class="tag">'+esc(S.friends.indexOf(r.p)>=0?tt('friends'):'?')+'</span></div><div class="row"><button class="btn s grow" data-a="decide" data-x="'+id+'" data-y="'+r.p+':approved">'+esc(tt('approve'))+'</button><button class="btn s o grow" data-a="decide" data-x="'+id+'" data-y="'+r.p+':declined">'+esc(tt('decline'))+'</button><button class="btn s o" data-a="go" data-x="user" data-y="'+r.p+'">'+esc(tt('profile'))+'</button></div></div>'}).join(''):'<div class="card mut">'+esc(tt('noreq'))+'</div>')+
+ (a.length?'<h2>'+esc(tt('approved'))+' ('+a.length+')</h2>'+a.map(function(r){return pcard(r.p,'<span class="tag">'+esc(tt('approved'))+'</span>')}).join(''):'')+
+ '<button class="btn" data-a="startdrive" data-x="'+id+'">'+esc(tt('start'))+'</button></div>'};
+V.drive=function(id){var a=((S.rq[id]||[]).filter(function(r){return r.st==='approved'})),first=a[0],gm=Math.max(0,Math.ceil(4*(1-Math.min(1,S.sim.dprog*2))));
+ return '<div class="map">'+mapSvg({f:S.sim.dprog,stop:(trip(id)||{stops:[]}).stops[0],gt:first?ini(nm(first.p)):''})+'<button class="ib" data-a="back" aria-label="Back" style="position:absolute;top:16px;left:16px">'+ic('back')+'</button></div>'+
+ '<div class="sheet"><div class="row"><span class="live"><i></i>'+esc(tt('live'))+'</span><b class="grow">'+esc(S.sim.pause?'⏸':'')+'</b></div>'+
+ '<div class="card" style="background:var(--bg)"><div class="row"><div class="grow"><b>'+a.length+' ✓</b><div class="mut">'+a.map(function(r){return esc(nm(r.p))}).join(', ')+'</div></div></div></div>'+
+ (first?'<div class="card"><div class="row"><div class="grow"><div class="mut">'+esc(((trip(id)||{stops:[]}).stops[0])||'')+'</div><b id="gm">'+esc(nm(first.p))+' · '+gm+' '+esc(tt('minaway'))+'</b></div></div></div>':'')+
+ (trip(id)?etaBox(trip(id)):'')+'<div class="row" style="margin-top:auto"><button class="btn o" data-a="pause">'+esc(S.sim.pause?tt('resume'):tt('pause'))+'</button><button class="btn n" data-a="enddrive">'+esc(tt('end'))+'</button></div></div>'};
+V.follow=function(){var t=trip('t2'),eta=Math.ceil(12*(1-S.sim.fprog));
+ return '<div class="map">'+mapSvg({f:PF*S.sim.fprog,stop:t.stops[0],pass:S.sim.pass,passLabel:'You'})+'<button class="ib" data-a="back" aria-label="Back" style="position:absolute;top:16px;left:16px">'+ic('back')+'</button><span class="live" style="position:absolute;top:22px;right:16px;background:var(--card)"><i></i>'+esc(tt('live'))+'</span></div>'+
+ '<div class="sheet"><div class="row"><div class="grow"><div class="mut">'+esc(nm('ip'))+'</div><div style="font-size:34px;font-weight:800;line-height:40px" id="eta">'+eta+' min</div></div><div style="text-align:right"><div class="mut">'+esc(t.stops[0])+'</div><b>'+esc(t.time)+'</b></div></div>'+
+ '<div class="bar"><b id="bar" style="width:'+Math.round(S.sim.fprog*100)+'%"></b></div>'+
+ '<div class="card" style="background:var(--bg)"><div class="row">'+av('ip',46)+'<div class="grow"><b>'+esc(nm('ip'))+'</b><div class="mut">Grey sedan</div></div></div></div>'+
+ '<button class="card" data-a="passshare" style="flex-direction:row;align-items:center"><span class="grow"><b>'+esc(tt('sharemy'))+'</b></span><span class="sw'+(S.sim.pass?' on':'')+'"></span></button></div>'};
+V.alerts=function(){return hdr(tt('alerts'))+'<div class="scroll">'+S.notifs.map(function(n){var t=n.trip?trip(n.trip):null;
+ return '<button class="card" data-a="notif" data-x="'+n.id+'"><div class="row">'+av(n.who,44)+'<div class="grow"><b>'+esc(nm(n.who))+' '+esc(tt(n.type))+'</b>'+(t?'<div class="mut">'+esc(t.from)+' → '+esc(t.to)+' · '+esc(fd(t.date))+' · '+esc(t.time)+'</div>':'')+'</div></div></button>'}).join('')+'</div>'};
+
+/* render */
+var lastKey='';
+function R(){
+ var top=S.stack[S.stack.length-1],v=top[0],key=v+':'+(top[1]||''),sc=$('.scroll'),keep=sc&&key===lastKey?sc.scrollTop:0;
+ var html='<div class="shell">'+(V[v]?V[v](top[1]):'')+
+  (S.banner?'<button class="banner" data-a="banner">'+av(S.banner.who,40)+'<div class="grow"><b>'+esc(nm(S.banner.who))+' '+esc(tt(S.banner.type))+'</b>'+(S.banner.line?'<div class="mut">'+esc(S.banner.line)+'</div>':'')+'</div></button>':'')+
+  (S.toast?'<div class="toast" role="status">'+esc(S.toast)+'</div>':'')+'</div>';
+ $('#app').innerHTML=html;lastKey=key;
+ var s2=$('.scroll');if(s2&&keep)s2.scrollTop=keep;
+ try{document.documentElement.lang=S.lang}catch(e){}
+}
+function go(v,p){S.stack.push([v,p]);R()}
+function back(){if(S.stack.length>1)S.stack.pop();R()}
+function toast(m){S.toast=m;R();clearTimeout(toastT);toastT=setTimeout(function(){S.toast='';R()},2200)}
+function notify(n,line){n.id=nid++;n.read=0;S.notifs.unshift(n);S.banner={who:n.who,type:n.type,line:line||'',n:n};R();clearTimeout(banT);banT=setTimeout(function(){S.banner=null;R()},5000)}
+function login(name,email){S.user={name:name,email:email||''};S.stack=[['home']];R();
+ setTimeout(function(){if(!S.user)return;var t={id:'t'+(tid++),by:'mk',from:'Sofia',to:'Burgas',stops:['Karlovo'],date:day(3),time:'06:30',seats:3,taken:0,price:12,vis:'friends'};S.trips.push(t);notify({type:'plan',who:'mk',trip:t.id},t.from+' → '+t.to+' · '+t.time)},7000)}
+function copy(txt){try{var p=navigator.clipboard&&navigator.clipboard.writeText(txt);if(p&&p.catch)p.catch(function(){})}catch(e){}toast(tt('copied'))}
+
+function act(a,x,y){switch(a){
+ case'back':back();break;
+ case'tab':S.stack=[[x]];R();break;
+ case'setlang':S.lang=x;try{localStorage.setItem('tm_lang',x)}catch(e){}R();break;
+ case'go':go(x,y);break;
+ case'google':login('Alex Demo','');break;
+ case'emaillogin':var em=(S.form.email||'').trim();if(em.indexOf('@')<1){toast(tt('email')+' ?');break}login((S.form.name||'').trim()||em.split('@')[0],em);break;
+ case'add':if(S.sent.indexOf(x)<0)S.sent.push(x);R();
+  setTimeout(function(){if(S.friends.indexOf(x)<0&&S.sent.indexOf(x)>=0&&S.user){S.friends.push(x);S.sent=S.sent.filter(function(i){return i!==x});notify({type:'acc',who:x})}},3500);break;
+ case'accept':if(S.friends.indexOf(x)<0)S.friends.push(x);S.incoming=S.incoming.filter(function(i){return i!==x});R();break;
+ case'alerts':S.notifs.forEach(function(n){n.read=1});go('alerts');break;
+ case'banner':if(S.banner){var n=S.banner.n;S.banner=null;openNotif(n)}break;
+ case'notif':openNotif(S.notifs.filter(function(n){return String(n.id)===x})[0]);break;
+ case'search':R();break;
+ case'vis':S.form.ovis=x;R();break;
+ case'omode':S.form.omode=x;R();break;
+ case'pvis':S.form.prvis=x;R();break;
+ case'ftab':S.form.ftab=x;R();break;
+ case'cancelreq':S.wanted=S.wanted.filter(function(w){return w.id!==x});R();break;
+ case'offerfor':{var w=wnt(x);if(!w)break;S.form.ofrom=w.from;S.form.oto=w.to;S.form.odate=w.date;S.form.otime=w.t1;S.form.ovis=w.vis;S.form.reply=w.id;S.stack=[['home'],['offer']];R();break}
+ case'postreqgo':{var f2=S.form,pf=(f2.sfrom||'').trim(),pt2=(f2.sto||'').trim();if(!pf||!pt2){toast(tt('from')+' / '+tt('to')+' ?');break}
+  var w2={id:'w'+(tid++),by:'me',from:pf,to:pt2,date:f2.sdate||day(1),t1:f2.prt1||'17:00',t2:f2.prt2||'19:00',vis:f2.prvis||'friends',st:'open'};S.wanted.unshift(w2);
+  ['sfrom','sto','sdate','prt1','prt2','prvis'].forEach(function(k){delete S.form[k]});S.stack=[['trips']];toast(tt('posted')+' ✓');
+  setTimeout(function(){if(!S.user||!wnt(w2.id))return;var d=km(w2.from,w2.to)||100,t={id:'t'+(tid++),by:'ip',from:w2.from,to:w2.to,stops:[],date:w2.date,time:w2.t1,seats:3,taken:0,price:Math.max(3,Math.round(d*.08)),vis:'friends'};S.trips.push(t);w2.st='offered';w2.trip=t.id;notify({type:'offered',who:'ip',trip:t.id},t.from+' → '+t.to+' · '+t.time)},4500);break}
+ case'publish':{var f=S.form,fr=(f.ofrom!=null?f.ofrom:'Sofia').trim(),to=(f.oto!=null?f.oto:'Plovdiv').trim();if(!fr||!to){toast(tt('from')+' / '+tt('to')+' ?');break}
+  var t={id:'m'+(tid++),by:'me',from:fr,to:to,stops:(f.ostops||'').split(',').map(function(s){return s.trim()}).filter(Boolean),date:f.odate||day(2),time:f.otime||'08:00',seats:+(f.oseats||3),taken:0,price:Math.max(0,+(f.oprice!=null?f.oprice:5)||0),vis:f.ovis||'friends'};
+  if(f.omode==='leg'){var nl=t.stops.length+1,ol=(f.olegs||[]).map(function(v){return Math.max(0,+v||0)});if(ol.length===nl){t.legs=ol;t.price=ol.reduce(function(a,b){return a+b},0)}}
+  S.trips.push(t);S.rq[t.id]=[];if(S.form.reply&&wnt(S.form.reply)){var rw=wnt(S.form.reply);rw.st='offered';rw.trip=t.id}['ofrom','oto','ostops','odate','otime','oseats','oprice','ovis','reply','omode','olegs'].forEach(function(k){delete S.form[k]});
+  S.stack=[['home'],['share',t.id]];toast(tt('pubd')+' ✓');
+  setTimeout(function(){if(!S.user||!trip(t.id))return;S.rq[t.id].push({p:'gt',st:'pending'});notify({type:'wants',who:'gt',trip:t.id},t.from+' → '+t.to)},4000);break}
+ case'sharepost':copy(shareText(x));break;
+ case'invite':copy('Tripmates — '+tt('tag'));break;
+ case'reqseat':S.reqs[x]='pending';R();
+  setTimeout(function(){if(S.reqs[x]!=='pending'||!S.user)return;S.reqs[x]='approved';var t=trip(x);notify({type:'apprn',who:t.by,trip:x},t.from+' → '+t.to)},3500);break;
+ case'decide':{var p=y.split(':');(S.rq[x]||[]).forEach(function(r){if(r.p===p[0]){r.st=p[1];if(p[1]==='approved')trip(x).taken++}});R();break}
+ case'startdrive':S.sim.drive=true;S.sim.dprog=0;S.sim.pause=false;go('drive',x);break;
+ case'pause':S.sim.pause=!S.sim.pause;R();break;
+ case'enddrive':S.sim.drive=false;S.sim.dprog=0;S.stack=[['home']];toast(tt('end')+' ✓');break;
+ case'startfollow':S.sim.fprog=0;S.sim.pass=false;go('follow');break;
+ case'passshare':S.sim.pass=!S.sim.pass;R();break;
+ case'logout':S.user=null;S.stack=[['welcome']];S.sim.drive=false;R();break;
+}}
+function openNotif(n){if(!n)return;n.read=1;if(n.type==='wants')go('requests',n.trip);else if(n.type==='acc')go('user',n.who);else go('ride',n.trip)}
+
+document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('[data-a]');if(!b||b.disabled)return;act(b.getAttribute('data-a'),b.getAttribute('data-x'),b.getAttribute('data-y'))});
+document.addEventListener('input',function(e){var k=e.target.getAttribute&&e.target.getAttribute('data-bind');if(k)S.form[k]=e.target.value;var lg=e.target.getAttribute&&e.target.getAttribute('data-leg');if(lg!=null&&S.form.olegs)S.form.olegs[+lg]=e.target.value});
+document.addEventListener('change',function(e){var t=e.target;if(!t.getAttribute)return;var k=t.getAttribute('data-bind');if(k)S.form[k]=t.value;if(k&&/^o(from|to|stops|date|time)$/.test(k)&&S.stack[S.stack.length-1][0]==='offer')R();
+ if(t.getAttribute('data-leg')!=null)R();
+ var sg=t.getAttribute('data-sg');if(sg){var tid=t.getAttribute('data-tid'),tp=trip(tid),n=legs(tp).length;S.form['sg'+sg+tid]=t.value;var f0=+(S.form['sgf'+tid]||0),t0=+(S.form['sgt'+tid]!=null?S.form['sgt'+tid]:n);if(t0<=f0){if(sg==='f')S.form['sgt'+tid]=f0+1;else S.form['sgf'+tid]=t0-1}R()}
+ if(t.getAttribute('data-lang')){S.lang=t.value;try{localStorage.setItem('tm_lang',S.lang)}catch(x){}R()}
+ if(t.getAttribute('data-photo')&&t.files&&t.files[0]){var r=new FileReader();r.onload=function(){S.photo=r.result;R()};r.readAsDataURL(t.files[0])}});
+
+function upd(){var top=S.stack[S.stack.length-1][0],m=$('#mk');
+ if(top==='drive'&&m){var q=pt(S.sim.dprog);m.setAttribute('transform','translate('+q[0].toFixed(1)+' '+q[1].toFixed(1)+')');var g=$('#gm'),a=(S.rq[S.stack[S.stack.length-1][1]]||[]).filter(function(r){return r.st==='approved'})[0];if(g&&a)g.textContent=nm(a.p)+' · '+Math.max(0,Math.ceil(4*(1-Math.min(1,S.sim.dprog*2))))+' '+tt('minaway')}
+ if(top==='follow'&&m){var q2=pt(PF*S.sim.fprog);m.setAttribute('transform','translate('+q2[0].toFixed(1)+' '+q2[1].toFixed(1)+')');var e=$('#eta'),bar=$('#bar');if(e)e.textContent=Math.ceil(12*(1-S.sim.fprog))+' min';if(bar)bar.style.width=Math.round(S.sim.fprog*100)+'%'}}
+setInterval(function(){if(S.sim.drive&&!S.sim.pause)S.sim.dprog=Math.min(1,S.sim.dprog+.0125);
+ if(S.sim.fprog<1)S.sim.fprog=Math.min(1,S.sim.fprog+.0125);upd()},1000);
+
+/* Android back button (only inside the Android app) */
+try{var CAP=window.Capacitor&&window.Capacitor.Plugins&&window.Capacitor.Plugins.App;if(CAP&&CAP.addListener)CAP.addListener('backButton',function(){if(S.stack.length>1)back();else CAP.exitApp()})}catch(e){}
+window.__tm={S:S,T:T,K:K,act:act,R:R,tt:tt,V:V};
+R();
+})();
+</script>
+<script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){})})}</script>
+</body>
+</html>
